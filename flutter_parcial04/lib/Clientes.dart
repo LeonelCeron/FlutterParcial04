@@ -2,20 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class Principal extends StatefulWidget {
-  const Principal({super.key});
+class Clientes extends StatefulWidget {
+  const Clientes({super.key});
 
   @override
-  State<Principal> createState() => _PrincipalState();
+  State<Clientes> createState() => _ClientesState();
 }
 
-class _PrincipalState extends State<Principal> {
+class _ClientesState extends State<Clientes> {
   // text fields' controllers
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _precioController = TextEditingController();
 
   final CollectionReference _productos =
-      FirebaseFirestore.instance.collection('productos');
+      FirebaseFirestore.instance.collection('clientes');
 //insertar producto
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     await showModalBottomSheet(
@@ -156,8 +156,15 @@ class _PrincipalState extends State<Principal> {
                   return Card(
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
-                      title: Text('Nombre: ' + documentSnapshot['nombre'].toString()),
-                      subtitle: Text(documentSnapshot['precio'].toString()),
+                      title: Text('Cédula: '+documentSnapshot['cedula'].toString() + '\n'+
+                      'Nombre: ' + documentSnapshot['nombre'].toString()),
+                      subtitle: Text('Apellido: '+documentSnapshot['apellido'].toString() + '\n'+
+                      'Fecha nacimiento: ' +documentSnapshot['fecha_nacimiento'].toString()+ '\n'+
+                      'Sexo: ' +documentSnapshot['sexo'].toString()+ '\n'+
+                      'Tipo cliente: ' +documentSnapshot['tipo'].toString()+ '\n'+
+                      'Usuario: ' +documentSnapshot['usuario'].toString()+ '\n'+
+                      'Reserva: ' +documentSnapshot['reserva_id_reserva'].toString()+ '\n'),
+                      
                       trailing: SizedBox(
                         width: 100,
                         child: Row(

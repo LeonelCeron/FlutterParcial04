@@ -1,4 +1,5 @@
 
+import 'package:flutter_parcial04/Clientes.dart';
 import 'package:flutter_parcial04/Principal.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,7 +19,7 @@ class Parcial04 extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Firebase Firestore',
-      home: Principal(),
+      home: Clientes(),
     );
   }
 }
