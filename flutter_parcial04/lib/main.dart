@@ -18,7 +18,7 @@ class Parcial04 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Firebase Firestore',
+      title: 'Parcial 04',
       home: Clientes(),
     );
   }

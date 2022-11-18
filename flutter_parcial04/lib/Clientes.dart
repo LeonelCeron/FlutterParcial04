@@ -11,17 +11,26 @@ class Clientes extends StatefulWidget {
 
 class _ClientesState extends State<Clientes> {
   // text fields' controllers
+  final TextEditingController _cedulaController = TextEditingController();
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _precioController = TextEditingController();
+  final TextEditingController _apellidoController = TextEditingController();
+  final TextEditingController _fecha_nacimientoController = TextEditingController();
+  final TextEditingController _sexoController = TextEditingController();
+  final TextEditingController _tipoController = TextEditingController();
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _reserva_id_reservaController = TextEditingController();
 
-  final CollectionReference _productos =
+  final CollectionReference _clientes =
       FirebaseFirestore.instance.collection('clientes');
 //insertar producto
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     await showModalBottomSheet(
+      
         isScrollControlled: true,
         context: context,
         builder: (BuildContext ctx) {
+          reset();
+          _reserva_id_reservaController.text = 'Sr6Dp1bh98szXhClO48s';  
           return Padding(
             padding: EdgeInsets.only(
                 top: 20,
@@ -33,15 +42,106 @@ class _ClientesState extends State<Clientes> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(labelText: 'Nombre:'),
+                  maxLength: 20,
+                  controller: _cedulaController,
+                  decoration: const InputDecoration(
+                      labelText: 'Cedula:',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.card_membership_outlined)),
                 ),
                 TextField(
+                  maxLength: 20,
+                  controller: _nombreController,
+                  decoration: const InputDecoration(
+                      labelText: 'Nombre: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person)
+                  ),
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _apellidoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Apellido: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  controller: _precioController,
+                  controller: _fecha_nacimientoController,
                   decoration: const InputDecoration(
-                    labelText: 'Precio',
+                      labelText: 'Fecha nacimiento Eje: (01 Ene 1998)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.date_range)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _sexoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Sexo: Ej:(Masculino/Femenino)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.people_alt_outlined)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _tipoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Tipo Ej:(A, B, C)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.category_outlined)
+                  ), 
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _usuarioController,
+                  decoration: const InputDecoration(
+                      labelText: 'Usuario: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.verified_user_outlined)
+                  ),
+                ),
+                TextField(
+                  maxLength: 100,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  controller: _reserva_id_reservaController,
+                  decoration: const InputDecoration(
+                      labelText: 'Reserva: ',
+                      enabled: false,
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.book_online_outlined)
                   ),
                 ),
                 const SizedBox(
@@ -50,16 +150,29 @@ class _ClientesState extends State<Clientes> {
                 ElevatedButton(
                   child: const Text('Crear'),
                   onPressed: () async {
+                    final String cedula = _cedulaController.text;
                     final String nombre = _nombreController.text;
-                    final double? precio =
-                        double.tryParse(_precioController.text);
-                    if (precio != null) {
-                      await _productos
-                          .add({"nombre": nombre, "precio": precio});
+                    final String apellido = _apellidoController.text;
+                    final String fecha_nacimiento= _fecha_nacimientoController.text;   
+                    final String sexo = _sexoController.text;
+                    final String tipo = _tipoController.text;
+                    final String usuario = _usuarioController.text;
+                    final String reserva_id_reserva= _reserva_id_reservaController.text;                                        
+                    if (cedula != null) {
+                      await _clientes
+                          .add({"cedula": cedula, "nombre": nombre, "apellido": apellido, "fecha_nacimiento": fecha_nacimiento, "sexo": sexo, "tipo": tipo, "usuario": usuario, "reserva_id_reserva": reserva_id_reserva});
 
+                      _cedulaController.text = '';
                       _nombreController.text = '';
-                      _precioController.text = '';
+                      _apellidoController.text = '';
+                      _fecha_nacimientoController.text = '';  
+                      _sexoController.text = '';
+                      _tipoController.text = '';
+                      _usuarioController.text = '';
+                      _reserva_id_reservaController.text = '';                                            
                       Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('El cliente fue agregado correctamente')));
                     }
                   },
                 )
@@ -72,8 +185,14 @@ class _ClientesState extends State<Clientes> {
 
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
+      _cedulaController.text = documentSnapshot['cedula'].toString();
       _nombreController.text = documentSnapshot['nombre'].toString();
-      _precioController.text = documentSnapshot['precio'].toString();
+      _apellidoController.text = documentSnapshot['apellido'].toString();
+      _fecha_nacimientoController.text = documentSnapshot['fecha_nacimiento'].toString();
+      _sexoController.text = documentSnapshot['sexo'].toString();
+      _tipoController.text = documentSnapshot['tipo'].toString();
+      _usuarioController.text = documentSnapshot['usuario'].toString();
+      _reserva_id_reservaController.text = documentSnapshot['reserva_id_reserva'].toString();
     }
 
     await showModalBottomSheet(
@@ -91,15 +210,105 @@ class _ClientesState extends State<Clientes> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(labelText: 'Nombre'),
+                  maxLength: 20,
+                  controller: _cedulaController,
+                  decoration: const InputDecoration(
+                      labelText: 'Cedula:',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.card_membership_outlined)),
                 ),
                 TextField(
+                  maxLength: 20,
+                  controller: _nombreController,
+                  decoration: const InputDecoration(
+                      labelText: 'Nombre: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person)
+                  ),
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _apellidoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Apellido: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
-                  controller: _precioController,
+                  controller: _fecha_nacimientoController,
                   decoration: const InputDecoration(
-                    labelText: 'Precio',
+                      labelText: 'Fecha nacimiento Eje: (01 Ene 1998)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.date_range)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _sexoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Sexo: Ej:(Masculino/Femenino)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.people_alt_outlined)
+                  ),
+                  
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _tipoController,
+                  decoration: const InputDecoration(
+                      labelText: 'Tipo Ej:(A, B, C)',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.category_outlined)
+                  ), 
+                ),
+                TextField(
+                  maxLength: 20,
+                  controller: _usuarioController,
+                  decoration: const InputDecoration(
+                      labelText: 'Usuario: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.verified_user_outlined)
+                  ),
+                ),
+                TextField(
+                  maxLength: 100,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  controller: _reserva_id_reservaController,
+                  decoration: const InputDecoration(
+                      labelText: 'Reserva: ',
+                      fillColor: Colors.white,
+                      filled: true,
+                      //errorText: 'Error message',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.book_online_outlined)
                   ),
                 ),
                 const SizedBox(
@@ -108,18 +317,34 @@ class _ClientesState extends State<Clientes> {
                 ElevatedButton(
                   child: const Text('Update'),
                   onPressed: () async {
+                    final String cedula = _cedulaController.text;
                     final String nombre = _nombreController.text;
-                    final double? precio =
-                        double.tryParse(_precioController.text);
-                    if (precio != null) {
-                      await _productos
+                    final String apellido = _apellidoController.text;
+                    final String fecha_nacimiento= _fecha_nacimientoController.text;   
+                    final String sexo = _sexoController.text;
+                    final String tipo = _tipoController.text;
+                    final String usuario = _usuarioController.text;
+                    final String reserva_id_reserva= _reserva_id_reservaController.text; 
+                    if (cedula != null) {
+                      await _clientes
                           .doc(documentSnapshot!.id)
-                          .update({"nombre": nombre, "precio": precio});
+                          .update({"cedula": cedula, "nombre": nombre, "apellido": apellido, "fecha_nacimiento": fecha_nacimiento, "sexo": sexo, "tipo": tipo, "usuario": usuario, "reserva_id_reserva": reserva_id_reserva});
+
+                      /*
+                      _cedulaController.text = '';
                       _nombreController.text = '';
-                      _precioController.text = '';
+                      _apellidoController.text = '';
+                      _fecha_nacimientoController.text = '';  
+                      _sexoController.text = '';
+                      _tipoController.text = '';
+                      _usuarioController.text = '';
+                      */
+                      reset();
+                      _reserva_id_reservaController.text = '';  
+
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('El producto fue actualizado correctamente')));
+        content: Text('El cliente fue actualizado correctamente')));
                     }
                   },
                 )
@@ -130,22 +355,31 @@ class _ClientesState extends State<Clientes> {
   }
 
 //borrar productos
-  Future<void> _delete(String productId) async {
-    await _productos.doc(productId).delete();
+  Future<void> _delete(String clientId) async {
+    await _clientes.doc(clientId).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('El producto fue eliminado correctamente')));
+        content: Text('El cliente fue eliminado correctamente')));
   }
 
+reset() {
+    _cedulaController.text = '';
+    _nombreController.text = '';
+    _apellidoController.text = '';
+    _fecha_nacimientoController.text = '';
+    _sexoController.text = '';
+    _tipoController.text = '';
+    _usuarioController.text = '';
+  }
 //Listar Clientes
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('Firebase Firestore')),
+          title: const Center(child: Text('Firebase Clientes')),
         ),
         body: StreamBuilder(
-          stream: _productos.snapshots(),
+          stream: _clientes.snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
               return ListView.builder(
@@ -156,9 +390,9 @@ class _ClientesState extends State<Clientes> {
                   return Card(
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
-                      title: Text('Cédula: '+documentSnapshot['cedula'].toString() + '\n'+
-                      'Nombre: ' + documentSnapshot['nombre'].toString()),
-                      subtitle: Text('Apellido: '+documentSnapshot['apellido'].toString() + '\n'+
+                      title: Text('Nombre: '+documentSnapshot['nombre'].toString() + '\n'+
+                      'Apellido: ' + documentSnapshot['apellido'].toString()),
+                      subtitle: Text('Cédula: '+documentSnapshot['cedula'].toString() + '\n'+
                       'Fecha nacimiento: ' +documentSnapshot['fecha_nacimiento'].toString()+ '\n'+
                       'Sexo: ' +documentSnapshot['sexo'].toString()+ '\n'+
                       'Tipo cliente: ' +documentSnapshot['tipo'].toString()+ '\n'+
@@ -170,10 +404,13 @@ class _ClientesState extends State<Clientes> {
                         child: Row(
                           children: [
                             IconButton(
-                                icon: const Icon(Icons.edit),
+                                icon: const Icon(Icons.edit,
+                                color: Colors.green,),
+
                                 onPressed: () => _update(documentSnapshot)),
                             IconButton(
-                                icon: const Icon(Icons.delete),
+                                icon: const Icon(Icons.delete,
+                                color: Colors.redAccent,),
                                 onPressed: () => _delete(documentSnapshot.id)),
                           ],
                         ),
@@ -189,7 +426,7 @@ class _ClientesState extends State<Clientes> {
             );
           },
         ),
-// agregar productos
+// agregar clientes
         floatingActionButton: FloatingActionButton(
           onPressed: () => _create(),
           child: const Icon(Icons.add),
